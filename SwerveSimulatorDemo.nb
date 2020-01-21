@@ -1,0 +1,2382 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    105866,       2374]
+NotebookOptionsPosition[     99184,       2246]
+NotebookOutlinePosition[    101227,       2296]
+CellTagsIndexPosition[    100894,       2284]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Swerve Drive Robot Simulator - FRC Team 1072", "DemoTitle",
+ CellChangeTimes->{{3.7864928613447065`*^9, 
+  3.7864928949620895`*^9}},ExpressionUUID->"91d07b9b-e441-47eb-866f-\
+134375af8b49"],
+
+Cell[CellGroupData[{
+
+Cell["", "InitializationSection",ExpressionUUID->"71ca1341-15a2-4375-b097-704942d0e529"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Rotation", " ", "around", " ", "the", " ", "origin"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"rotationmatrix", "[", "\[Theta]_", "]"}], " ", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Cos", "[", "\[Theta]", "]"}], ",", 
+         RowBox[{"Sin", "[", "\[Theta]", "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", 
+          RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ",", 
+         RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"getOriginalWheelPts", "=", 
+      RowBox[{"Function", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", "point", "}"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"point", "+", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.1"}], ",", "0.23"}], "}"}]}], ",", 
+          RowBox[{"point", "+", 
+           RowBox[{"{", 
+            RowBox[{"0.1", ",", "0.23"}], "}"}]}], ",", 
+          RowBox[{"point", "+", 
+           RowBox[{"{", 
+            RowBox[{"0.1", ",", 
+             RowBox[{"-", "0.23"}]}], "}"}]}], ",", 
+          RowBox[{"point", "+", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.1"}], ",", 
+             RowBox[{"-", "0.23"}]}], "}"}]}], ",", 
+          RowBox[{"point", "+", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "0.1"}], ",", "0.23"}], "}"}]}]}], "}"}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"2", "D", " ", "Transformation", " ", "Functions"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"getWheelPts", "=", 
+     RowBox[{"Function", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"point", ",", "\[Theta]"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Module", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"pts", "=", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "0.1"}], ",", "0.23"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0.1", ",", "0.23"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0.1", ",", 
+               RowBox[{"-", "0.23"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "0.1"}], ",", 
+               RowBox[{"-", "0.23"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "0.1"}], ",", "0.23"}], "}"}]}], "}"}]}], "}"}], 
+         ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"rotate", "[", 
+           RowBox[{"pts", ",", "\[Theta]"}], "]"}], "+", 
+          RowBox[{"{", 
+           RowBox[{
+           "point", ",", "point", ",", "point", ",", "point", ",", "point"}], 
+           "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rotate", " ", "=", " ", 
+     RowBox[{"Function", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"pts", ",", " ", "\[Theta]"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Table", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pts", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ".", 
+          RowBox[{"rotationmatrix", "[", "\[Theta]", "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", "1", ",", "5"}], "}"}]}], "\[IndentingNewLine]", 
+        "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]",
+    "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Vector", " ", "Functions"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"scaleRotation", "[", 
+      RowBox[{"rotVec_", ",", "x_", ",", "rotMag_"}], "]"}], "=", 
+     RowBox[{"rotVec", "*", 
+      RowBox[{"(", 
+       FractionBox["x", "rotMag"], ")"}]}]}], ";"}], " ", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Checks", " ", "for", " ", "indeterminate", " ", "values", " ", "in", " ",
+      "angle", " ", "calculations"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"checkIfDefined", " ", "=", " ", 
+     RowBox[{"Function", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", "val", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"SameQ", "[", 
+           RowBox[{"val", ",", "Indeterminate"}], "]"}], ")"}], ",", "0", ",",
+          "val"}], "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Surpress", " ", "errors", " ", "handled", " ", "in", " ", "function", 
+     " ", "above"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Off", "[", 
+    RowBox[{"Power", "::", "infy"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Off", "[", 
+    RowBox[{"Infinity", "::", "indet"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Off", "[", 
+    RowBox[{"ArcTan", "::", "indet"}], "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.786491392144165*^9, 3.7864914361575146`*^9}, {
+   3.7864915319387646`*^9, 3.7864915322488995`*^9}, 3.7864943265674257`*^9, {
+   3.786494475258792*^9, 3.786494498529817*^9}, {3.786494580545185*^9, 
+   3.786494589459709*^9}},
+ CellLabel->"In[31]:=",
+ CellID->37113198,ExpressionUUID->"e9070128-af01-4d59-a0ac-8552ff0baffd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ManipulateSection",ExpressionUUID->"84a5236f-fdbf-4f50-85f9-5214a130b60c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"robot", " ", "=", " ", 
+        RowBox[{"Graphics", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"FaceForm", "[", "]"}], ",", 
+            RowBox[{"EdgeForm", "[", "Black", "]"}], ",", 
+            RowBox[{"Rectangle", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                FractionBox[
+                 RowBox[{"-", "robotWidth"}], "2"], ",", 
+                FractionBox[
+                 RowBox[{"-", "robotLength"}], "2"]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                FractionBox["robotWidth", "2"], ",", 
+                FractionBox["robotLength", "2"]}], "}"}]}], "]"}]}], "}"}], 
+          ",", 
+          RowBox[{"PlotLabel", "\[Rule]", " ", 
+           RowBox[{"Column", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<Legend:\>\"", ",", "Black", ",", 
+                 RowBox[{"FontSize", "\[Rule]", "16"}]}], "]"}], ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<Translation Vectors\>\"", ",", "Red"}], "]"}], 
+               ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<Rotation Vectors\>\"", ",", "Blue"}], "]"}], ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<Net Vectors\>\"", ",", "Purple"}], "]"}], ",", 
+               "\"\<Rotation Circle\>\""}], "}"}], ",", "Center"}], "]"}]}], 
+          ",", 
+          RowBox[{"AxesOrigin", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"0", ",", "0"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0", ",", "0"}], "}"}]}], "}"}]}], ",", 
+          RowBox[{"PlotRange", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "4"}], ",", "4"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "2.5"}], ",", "3"}], "}"}]}], "}"}]}], ",", 
+          RowBox[{"Axes", "\[Rule]", "False"}]}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"robotVectorOrigin", "=", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "4"}], "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"topLeftPoint", " ", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           FractionBox[
+            RowBox[{"-", "robotWidth"}], "2"], "+", "0.3"}], ",", " ", 
+          RowBox[{
+           FractionBox["robotLength", "2"], " ", "-", " ", "0.3"}]}], "}"}]}],
+        ",", "\[IndentingNewLine]", 
+       RowBox[{"topRightPoint", " ", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           FractionBox["robotWidth", "2"], " ", "-", " ", "0.3"}], ",", "  ", 
+          RowBox[{
+           FractionBox["robotLength", "2"], " ", "-", " ", "0.3"}]}], "}"}]}],
+        ",", "\[IndentingNewLine]", 
+       RowBox[{"bottomLeftPoint", " ", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           FractionBox[
+            RowBox[{"-", "robotWidth"}], "2"], "+", "0.3"}], ",", " ", 
+          RowBox[{
+           FractionBox[
+            RowBox[{"-", "robotLength"}], "2"], " ", "+", " ", "0.3"}]}], 
+         "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"bottomRightPoint", " ", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           FractionBox["robotWidth", "2"], "-", "0.3"}], ",", " ", 
+          RowBox[{
+           FractionBox[
+            RowBox[{"-", "robotLength"}], "2"], " ", "+", " ", "0.3"}]}], 
+         "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"wheelToCenterDistance", " ", "=", " ", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             FractionBox["robotWidth", "2"], " ", "-", " ", "0.3"}], ")"}], 
+           "2"], "+", "  ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             FractionBox["robotLength", "2"], " ", "-", " ", "0.3"}], ")"}], 
+           "2"]}], "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"translation", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"rotationMagnitude", "=", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{
+          SuperscriptBox["robotWidth", "2"], "+", 
+          SuperscriptBox["robotLength", "2"]}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"topLeftRotation", "=", 
+        RowBox[{"{", 
+         RowBox[{"robotLength", ",", "robotWidth"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"topRightRotation", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{"robotLength", ",", 
+          RowBox[{"-", "robotWidth"}]}], "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"bottomLeftRotation", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "robotLength"}], ",", "robotWidth"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"bottomRightRotation", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "robotLength"}], ",", 
+          RowBox[{"-", "robotWidth"}]}], "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\[Theta]TopLeft", " ", "=", 
+        RowBox[{"checkIfDefined", "[", 
+         RowBox[{
+          FractionBox["Pi", "2"], "+", 
+          RowBox[{"ArcTan", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"robotLength", ",", "robotWidth"}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"robotLength", ",", "robotWidth"}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", "]"}]}],
+          "\[IndentingNewLine]", "]"}]}], ",", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"Module", " ", 
+          RowBox[{"doesn", "'"}], "t", " ", "let", " ", "you", " ", "use", 
+          " ", "local", " ", "vars"}], ",", " ", 
+         RowBox[{
+         "so", " ", "everything", " ", "that", " ", "was", " ", "just", " ", 
+          "defined", " ", "has", " ", "to", " ", "be", " ", "wrote", " ", 
+          "out", " ", "the", " ", "long", " ", 
+          RowBox[{"way", " ", ":", 
+           RowBox[{"(", " "}]}]}]}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"\[Theta]TopRight", " ", "=", 
+        RowBox[{"checkIfDefined", "[", 
+         RowBox[{
+          FractionBox["Pi", "2"], "+", 
+          RowBox[{"ArcTan", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"robotLength", ",", 
+                   RowBox[{"-", "robotWidth"}]}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"robotLength", ",", 
+                   RowBox[{"-", "robotWidth"}]}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", "]"}]}],
+          "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\[Theta]BottomLeft", " ", "=", 
+        RowBox[{"checkIfDefined", "[", 
+         RowBox[{
+          FractionBox["Pi", "2"], "+", 
+          RowBox[{"ArcTan", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"-", "robotLength"}], ",", "robotWidth"}], "}"}], 
+                 ",", "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"-", "robotLength"}], ",", "robotWidth"}], "}"}], 
+                 ",", "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", "]"}]}],
+          "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\[Theta]BottomRight", " ", "=", 
+        RowBox[{"checkIfDefined", "[", 
+         RowBox[{
+          FractionBox["Pi", "2"], "+", 
+          RowBox[{"ArcTan", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"-", "robotLength"}], ",", 
+                   RowBox[{"-", "robotWidth"}]}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"leftJoystickX", ",", "leftJoystickY"}], "}"}], " ", 
+               "+", " ", 
+               RowBox[{"scaleRotation", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"-", "robotLength"}], ",", 
+                   RowBox[{"-", "robotWidth"}]}], "}"}], ",", 
+                 "rightJoystickX", ",", 
+                 RowBox[{"Sqrt", "[", 
+                  RowBox[{
+                   SuperscriptBox["robotWidth", "2"], "+", 
+                   SuperscriptBox["robotLength", "2"]}], "]"}]}], "]"}]}], 
+              ")"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", "]"}]}],
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"Show", "[", "\[IndentingNewLine]", 
+      RowBox[{"robot", ",", "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "topLeftPoint", ",", "topRightPoint", ",", "bottomLeftPoint", ",", 
+           "bottomRightPoint"}], "}"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"{", "Black", "}"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Opacity", "[", "0.3", "]"}], ",", 
+          RowBox[{"Circle", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", "0"}], "}"}], ",", "wheelToCenterDistance"}], 
+           "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{
+         RowBox[{"getWheelPts", "[", 
+          RowBox[{"topLeftPoint", ",", "\[Theta]TopLeft"}], "]"}], ",", 
+         RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"Opacity", "[", "0.75", "]"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{
+         RowBox[{"getWheelPts", "[", 
+          RowBox[{"topRightPoint", ",", "\[Theta]TopRight"}], "]"}], ",", 
+         RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"Opacity", "[", "0.75", "]"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{
+         RowBox[{"getWheelPts", "[", 
+          RowBox[{"bottomLeftPoint", ",", "\[Theta]BottomLeft"}], "]"}], ",", 
+         RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"Opacity", "[", "0.75", "]"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{
+         RowBox[{"getWheelPts", "[", 
+          RowBox[{"bottomRightPoint", ",", "\[Theta]BottomRight"}], "]"}], 
+         ",", 
+         RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"Opacity", "[", "0.75", "]"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topLeftPoint", ",", 
+             RowBox[{"topLeftPoint", "+", "translation"}]}], "}"}], "]"}]}], 
+         "}"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topRightPoint", ",", 
+             RowBox[{"topRightPoint", "+", "translation"}]}], "}"}], "]"}]}], 
+         "}"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomLeftPoint", ",", 
+             RowBox[{"bottomLeftPoint", "+", "translation"}]}], "}"}], 
+           "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomRightPoint", ",", 
+             RowBox[{"bottomRightPoint", "+", "translation"}]}], "}"}], 
+           "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Blue", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topLeftPoint", ",", 
+             RowBox[{"topLeftPoint", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "topLeftRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Blue", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topRightPoint", ",", 
+             RowBox[{"topRightPoint", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "topRightRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Blue", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomLeftPoint", ",", 
+             RowBox[{"bottomLeftPoint", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "bottomLeftRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Blue", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomRightPoint", ",", 
+             RowBox[{"bottomRightPoint", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "bottomRightRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Purple", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topLeftPoint", ",", 
+             RowBox[{"topLeftPoint", "+", "translation", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "topLeftRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Purple", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"topRightPoint", ",", 
+             RowBox[{"topRightPoint", "+", "translation", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "topRightRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Purple", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomLeftPoint", ",", 
+             RowBox[{"bottomLeftPoint", "+", "translation", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "bottomLeftRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Graphics", "[", 
+        RowBox[{"{", 
+         RowBox[{"Purple", ",", 
+          RowBox[{"Arrow", "[", 
+           RowBox[{"{", 
+            RowBox[{"bottomRightPoint", ",", 
+             RowBox[{"bottomRightPoint", "+", "translation", "+", 
+              RowBox[{"scaleRotation", "[", 
+               RowBox[{
+               "bottomRightRotation", ",", "rightJoystickX", ",", 
+                "rotationMagnitude"}], "]"}]}]}], "}"}], "]"}]}], "}"}], 
+        "]"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}],
+    ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"robotWidth", ",", "2", ",", "\"\<Robot Width\>\""}], "}"}], 
+     ",", "1.5", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"robotLength", ",", "3", ",", "\"\<Robot Length\>\""}], "}"}], 
+     ",", "1.5", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"leftJoystickY", ",", "0", ",", "\"\<Up/Down Translation\>\""}],
+       "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "leftJoystickX", ",", "0", ",", "\"\<Left/Right Translation\>\""}], 
+      "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"rightJoystickX", ",", "0", ",", "\"\<Rotation\>\""}], "}"}], 
+     ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.7864915250930967`*^9, 3.7864915287498364`*^9}, {
+   3.7864917550955095`*^9, 3.7864917648140116`*^9}, 3.7864919815197816`*^9, {
+   3.7864921472492094`*^9, 3.786492168131653*^9}, {3.7864922319289484`*^9, 
+   3.786492232487791*^9}, {3.7864943671581807`*^9, 3.786494368138444*^9}, {
+   3.786494691731131*^9, 3.786494732557551*^9}, {3.7864958876600647`*^9, 
+   3.786496031340132*^9}},
+ CellLabel->"In[44]:=",ExpressionUUID->"681f5224-0dcc-4344-881e-1f337a09c2b7"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`leftJoystickX$$ = -0.0050000000000000044`, \
+$CellContext`leftJoystickY$$ = 
+    0.9750000000000001, $CellContext`rightJoystickX$$ = 
+    0.8300000000000001, $CellContext`robotLength$$ = 
+    3.84, $CellContext`robotWidth$$ = 1.8, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`robotWidth$$], 2.7, "Robot Width"}, 1.5, 4}, {{
+       Hold[$CellContext`robotLength$$], 2.49, "Robot Length"}, 1.5, 4}, {{
+       Hold[$CellContext`leftJoystickY$$], 0.9750000000000001, 
+       "Up/Down Translation"}, -1, 1}, {{
+       Hold[$CellContext`leftJoystickX$$], -0.0050000000000000044`, 
+       "Left/Right Translation"}, -1, 1}, {{
+       Hold[$CellContext`rightJoystickX$$], -0.865, "Rotation"}, -1, 1}}, 
+    Typeset`size$$ = {481., {205., 210.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`robotWidth$54950$$ = 
+    0, $CellContext`robotLength$54951$$ = 
+    0, $CellContext`leftJoystickY$54952$$ = 
+    0, $CellContext`leftJoystickX$54953$$ = 
+    0, $CellContext`rightJoystickX$54954$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`leftJoystickX$$ = -0.0050000000000000044`, \
+$CellContext`leftJoystickY$$ = 
+        0.9750000000000001, $CellContext`rightJoystickX$$ = -0.865, \
+$CellContext`robotLength$$ = 2.49, $CellContext`robotWidth$$ = 2.7}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`robotWidth$$, $CellContext`robotWidth$54950$$, 0], 
+        Hold[$CellContext`robotLength$$, $CellContext`robotLength$54951$$, 0], 
+        Hold[$CellContext`leftJoystickY$$, $CellContext`leftJoystickY$54952$$,
+          0], 
+        Hold[$CellContext`leftJoystickX$$, $CellContext`leftJoystickX$54953$$,
+          0], 
+        Hold[$CellContext`rightJoystickX$$, \
+$CellContext`rightJoystickX$54954$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Module[{$CellContext`robot$ = Graphics[{
+            FaceForm[], 
+            EdgeForm[Black], 
+            
+            Rectangle[{-$CellContext`robotWidth$$/
+              2, -$CellContext`robotLength$$/2}, {$CellContext`robotWidth$$/
+              2, $CellContext`robotLength$$/2}]}, PlotLabel -> Column[{
+              Style["Legend:", Black, FontSize -> 16], 
+              Style["Translation Vectors", Red], 
+              Style["Rotation Vectors", Blue], 
+              Style["Net Vectors", Purple], "Rotation Circle"}, Center], 
+           AxesOrigin -> {{0, 0}, {0, 0}}, PlotRange -> {{-4, 4}, {-2.5, 3}}, 
+           Axes -> False], $CellContext`robotVectorOrigin$ = {0, 
+          4}, $CellContext`topLeftPoint$ = {-$CellContext`robotWidth$$/2 + 
+           0.3, $CellContext`robotLength$$/2 - 
+           0.3}, $CellContext`topRightPoint$ = {$CellContext`robotWidth$$/2 - 
+           0.3, $CellContext`robotLength$$/2 - 
+           0.3}, $CellContext`bottomLeftPoint$ = {-$CellContext`robotWidth$$/
+            2 + 0.3, -$CellContext`robotLength$$/2 + 
+           0.3}, $CellContext`bottomRightPoint$ = {$CellContext`robotWidth$$/
+            2 - 0.3, -$CellContext`robotLength$$/2 + 
+           0.3}, $CellContext`wheelToCenterDistance$ = 
+         Sqrt[($CellContext`robotWidth$$/2 - 
+             0.3)^2 + ($CellContext`robotLength$$/2 - 
+             0.3)^2], $CellContext`translation$ = \
+{$CellContext`leftJoystickX$$, $CellContext`leftJoystickY$$}, \
+$CellContext`rotationMagnitude$ = 
+         Sqrt[$CellContext`robotWidth$$^2 + $CellContext`robotLength$$^2], \
+$CellContext`topLeftRotation$ = {$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`topRightRotation$ = \
+{$CellContext`robotLength$$, -$CellContext`robotWidth$$}, \
+$CellContext`bottomLeftRotation$ = {-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`bottomRightRotation$ = \
+{-$CellContext`robotLength$$, -$CellContext`robotWidth$$}, $CellContext`\
+\[Theta]TopLeft$ = $CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]TopRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]BottomLeft$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]BottomRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 2]]]}, 
+        Show[$CellContext`robot$, 
+         ListPlot[{$CellContext`topLeftPoint$, $CellContext`topRightPoint$, \
+$CellContext`bottomLeftPoint$, $CellContext`bottomRightPoint$}, 
+          PlotStyle -> {Black}], 
+         Graphics[{
+           Opacity[0.3], 
+           Circle[{0, 0}, $CellContext`wheelToCenterDistance$]}], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`topLeftPoint$, $CellContext`\
+\[Theta]TopLeft$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`topRightPoint$, $CellContext`\
+\[Theta]TopRight$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`bottomLeftPoint$, \
+$CellContext`\[Theta]BottomLeft$], Joined -> True, PlotStyle -> 
+          Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`bottomRightPoint$, \
+$CellContext`\[Theta]BottomRight$], Joined -> True, PlotStyle -> 
+          Opacity[0.75]], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}]]], 
+      "Specifications" :> {{{$CellContext`robotWidth$$, 2.7, "Robot Width"}, 
+         1.5, 4}, {{$CellContext`robotLength$$, 2.49, "Robot Length"}, 1.5, 
+         4}, {{$CellContext`leftJoystickY$$, 0.9750000000000001, 
+          "Up/Down Translation"}, -1, 
+         1}, {{$CellContext`leftJoystickX$$, -0.0050000000000000044`, 
+          "Left/Right Translation"}, -1, 
+         1}, {{$CellContext`rightJoystickX$$, -0.865, "Rotation"}, -1, 1}}, 
+      "Options" :> {}, "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{530., {306., 312.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>({$CellContext`checkIfDefined = 
+       Function[{$CellContext`val}, 
+         If[$CellContext`val === Indeterminate, 
+          0, $CellContext`val]], $CellContext`scaleRotation[
+         Pattern[$CellContext`rotVec, 
+          Blank[]], 
+         Pattern[$CellContext`x, 
+          Blank[]], 
+         Pattern[$CellContext`rotMag, 
+          
+          Blank[]]] = ($CellContext`rotVec \
+$CellContext`x)/$CellContext`rotMag, $CellContext`getWheelPts = 
+       Function[{$CellContext`point, $CellContext`\[Theta]}, 
+         Module[{$CellContext`pts = {{-0.1, 0.23}, {0.1, 0.23}, {
+            0.1, -0.23}, {-0.1, -0.23}, {-0.1, 
+            0.23}}}, $CellContext`rotate[$CellContext`pts, $CellContext`\
+\[Theta]] + {$CellContext`point, $CellContext`point, $CellContext`point, \
+$CellContext`point, $CellContext`point}]], $CellContext`rotate = 
+       Function[{$CellContext`pts, $CellContext`\[Theta]}, 
+         Table[
+          Dot[
+           Part[$CellContext`pts, $CellContext`i], 
+           $CellContext`rotationmatrix[$CellContext`\[Theta]]], \
+{$CellContext`i, 1, 5}]], $CellContext`rotationmatrix[
+         Pattern[$CellContext`\[Theta], 
+          Blank[]]] = {{
+          Cos[$CellContext`\[Theta]], 
+          Sin[$CellContext`\[Theta]]}, {-Sin[$CellContext`\[Theta]], 
+          Cos[$CellContext`\[Theta]]}}}; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->133708870,ExpressionUUID->"dcdc4b63-eee5-4c11-bee6-5fca0040dfe5"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ManipulateCaptionSection",ExpressionUUID->"b5b3bd13-ab84-4477-99b3-77a3e64c0224"],
+
+Cell["\<\
+Simulates a robot with a swerve drivetrain \
+(https://team1640.com/wiki/index.php/Swerve_Central). Given a combination of \
+robot translation and rotation values, the translation, rotation, and output \
+vectors for each of the four independent swerve modules are calculated and \
+displayed. This demonstration is useful to understand how to calculate the \
+vectors for each module such that the robot will translate and rotate as \
+desired. Note: An output vector represents a velocity vector, where the \
+direction of the vector is the direction that the module should point and the \
+magnitude of the vector is proportional to how fast the module's wheel should \
+rotate (the maximum output vector magnitude is Sqrt[2] and the minimum is 0, \
+so the output vector must be scaled to attain the desired range).\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.7864917867745256`*^9, 3.7864917993283987`*^9}, {
+  3.786491834116233*^9, 3.7864919004764194`*^9}, {3.7864919985036583`*^9, 
+  3.7864921382805624`*^9}, {3.786492309318549*^9, 3.78649253495485*^9}, {
+  3.786492605595224*^9, 3.7864927990839295`*^9}, {3.7864928565489206`*^9, 
+  3.786492857658519*^9}, {3.7864929261899877`*^9, 3.7864929782098875`*^9}, {
+  3.7864932862031965`*^9, 3.786493286798399*^9}, {3.786493317059594*^9, 
+  3.7864933503910227`*^9}, {3.7864937019401855`*^9, 3.786493705382267*^9}},
+ CellID->87092621,ExpressionUUID->"da6e7c23-c5bf-43c7-9fec-f960737dc4b0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ThumbnailSection",ExpressionUUID->"a8d36387-e509-43d0-9a95-0ca8140b2784"],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {EdgeForm[GrayLevel[0]], FaceForm[None], 
+    RectangleBox[{-2., -1.9925}, {2., 1.9925}]}, {{}, {{}, 
+     {GrayLevel[0], PointSize[0.012833333333333334`], AbsoluteThickness[1.6], 
+      PointBox[{{-1.7, 1.6925}, {1.7, 1.6925}, {-1.7, -1.6925}, {
+       1.7, -1.6925}}]}, {}}, {}, {}, {}, {}}, 
+   {Opacity[0.3], CircleBox[{0, 0}, 2.398865617328324]}, {{}, {{}, {}, 
+     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+      0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.75], 
+      LineBox[{{-1.8815702539649517`, 
+       1.5194906277824725`}, {-1.9503624009078329`, 
+       1.7072874342489006`}, {-1.5184297460350482`, 
+       1.8655093722175273`}, {-1.449637599092167, 
+       1.6777125657510992`}, {-1.8815702539649517`, 
+       1.5194906277824725`}}]}}, {}, {}, {}, {}}, {{}, {{}, {}, 
+     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+      0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.75], 
+      LineBox[{{1.449637599092167, 1.6777125657510992`}, {1.5184297460350482`,
+        1.8655093722175273`}, {1.9503624009078329`, 1.7072874342489006`}, {
+       1.8815702539649517`, 1.5194906277824725`}, {1.449637599092167, 
+       1.6777125657510992`}}]}}, {}, {}, {}, {}}, {{}, {{}, {}, 
+     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+      0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.75], 
+      LineBox[{{-1.756021156425639, -1.9369619193918228`}, \
+{-1.9169881701539548`, -1.8182622121833036`}, {-1.643978843574361, \
+-1.448038080608177}, {-1.483011829846045, -1.5667377878166961`}, \
+{-1.756021156425639, -1.9369619193918228`}}]}}, {}, {}, {}, {}}, {{}, {{}, {}, 
+     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+      0.012833333333333334`], AbsoluteThickness[1.6], Opacity[0.75], 
+      LineBox[{{1.483011829846045, -1.5667377878166961`}, {
+       1.643978843574361, -1.448038080608177}, {
+       1.9169881701539548`, -1.8182622121833036`}, {
+       1.756021156425639, -1.9369619193918228`}, {
+       1.483011829846045, -1.5667377878166961`}}]}}, {}, {}, {}, {}}, 
+   {RGBColor[1, 0, 0], 
+    ArrowBox[{{-1.7, 1.6925}, {-0.7849999999999999, 1.6925}}]}, 
+   {RGBColor[1, 0, 0], ArrowBox[{{1.7, 1.6925}, {2.615, 1.6925}}]}, 
+   {RGBColor[1, 0, 0], 
+    ArrowBox[{{-1.7, -1.6925}, {-0.7849999999999999, -1.6925}}]}, 
+   {RGBColor[1, 0, 0], ArrowBox[{{1.7, -1.6925}, {2.615, -1.6925}}]}, 
+   {RGBColor[0, 0, 1], 
+    ArrowBox[{{-1.7, 1.6925}, {-1.1741959710319767`, 2.2202832160281285`}}]}, 
+   {RGBColor[0, 0, 1], 
+    ArrowBox[{{1.7, 1.6925}, {2.225804028968023, 1.1647167839718713`}}]}, 
+   {RGBColor[0, 0, 1], 
+    ArrowBox[{{-1.7, -1.6925}, {-2.225804028968023, -1.1647167839718713`}}]}, 
+   {RGBColor[0, 0, 1], 
+    ArrowBox[{{1.7, -1.6925}, {1.1741959710319767`, -2.2202832160281285`}}]}, 
+   {RGBColor[0.5, 0, 0.5], 
+    ArrowBox[{{-1.7, 1.6925}, {-0.25919597103197667`, 2.2202832160281285`}}]}, 
+   {RGBColor[0.5, 0, 0.5], 
+    ArrowBox[{{1.7, 1.6925}, {3.1408040289680237`, 1.1647167839718713`}}]}, 
+   {RGBColor[0.5, 0, 0.5], 
+    ArrowBox[{{-1.7, -1.6925}, {-1.3108040289680232`, \
+-1.1647167839718713`}}]}, 
+   {RGBColor[0.5, 0, 0.5], 
+    ArrowBox[{{1.7, -1.6925}, {2.0891959710319767`, -2.2202832160281285`}}]}},
+  Axes->False,
+  AxesOrigin->{{0, 0}, {0, 0}},
+  PlotLabel->FormBox[
+    TagBox[
+     GridBox[{{
+        StyleBox["\"Legend:\"", 
+         GrayLevel[0], FontSize -> 16, StripOnInput -> False]}, {
+        StyleBox["\"Translation Vectors\"", 
+         RGBColor[1, 0, 0], StripOnInput -> False]}, {
+        StyleBox["\"Rotation Vectors\"", 
+         RGBColor[0, 0, 1], StripOnInput -> False]}, {
+        StyleBox["\"Net Vectors\"", 
+         RGBColor[0.5, 0, 0.5], StripOnInput -> False]}, {
+       "\"Rotation Circle\""}}, GridBoxAlignment -> {"Columns" -> {{Center}}},
+       DefaultBaseStyle -> "Column", 
+      GridBoxItemSize -> {
+       "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], "Column"], 
+    TraditionalForm],
+  PlotRange->{{-4, 4}, {-2.5, 3}}]], "Output",
+ CellEditDuplicate->False,
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{3.7864934775107083`*^9, 
+  3.7864962889668183`*^9},ExpressionUUID->"fad33bfa-7ffd-449d-886e-\
+00b9b7e5fd52"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "SnapshotsSection",ExpressionUUID->"e422ee72-883d-4137-9663-f64ac8edbeec"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`leftJoystickX$$ = -0.0050000000000000044`, \
+$CellContext`leftJoystickY$$ = 
+    0.9750000000000001, $CellContext`rightJoystickX$$ = 
+    0.8300000000000001, $CellContext`robotLength$$ = 
+    3.84, $CellContext`robotWidth$$ = 1.8, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`robotWidth$$], 2.7, "Robot Width"}, 1.5, 4}, {{
+       Hold[$CellContext`robotLength$$], 2.49, "Robot Length"}, 1.5, 4}, {{
+       Hold[$CellContext`leftJoystickY$$], 0.9750000000000001, 
+       "Up/Down Translation"}, -1, 1}, {{
+       Hold[$CellContext`leftJoystickX$$], -0.0050000000000000044`, 
+       "Left/Right Translation"}, -1, 1}, {{
+       Hold[$CellContext`rightJoystickX$$], -0.865, "Rotation"}, -1, 1}}, 
+    Typeset`size$$ = {487., {207., 212.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`robotWidth$54950$$ = 
+    0, $CellContext`robotLength$54951$$ = 
+    0, $CellContext`leftJoystickY$54952$$ = 
+    0, $CellContext`leftJoystickX$54953$$ = 
+    0, $CellContext`rightJoystickX$54954$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`leftJoystickX$$ = -0.0050000000000000044`, \
+$CellContext`leftJoystickY$$ = 
+        0.9750000000000001, $CellContext`rightJoystickX$$ = -0.865, \
+$CellContext`robotLength$$ = 2.49, $CellContext`robotWidth$$ = 2.7}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`robotWidth$$, $CellContext`robotWidth$54950$$, 0], 
+        Hold[$CellContext`robotLength$$, $CellContext`robotLength$54951$$, 0], 
+        Hold[$CellContext`leftJoystickY$$, $CellContext`leftJoystickY$54952$$,
+          0], 
+        Hold[$CellContext`leftJoystickX$$, $CellContext`leftJoystickX$54953$$,
+          0], 
+        Hold[$CellContext`rightJoystickX$$, \
+$CellContext`rightJoystickX$54954$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Module[{$CellContext`robot$ = Graphics[{
+            FaceForm[], 
+            EdgeForm[Black], 
+            
+            Rectangle[{-$CellContext`robotWidth$$/
+              2, -$CellContext`robotLength$$/2}, {$CellContext`robotWidth$$/
+              2, $CellContext`robotLength$$/2}]}, PlotLabel -> Column[{
+              Style["Legend:", Black, FontSize -> 16], 
+              Style["Translation Vectors", Red], 
+              Style["Rotation Vectors", Blue], 
+              Style["Net Vectors", Purple], "Rotation Circle"}, Center], 
+           AxesOrigin -> {{0, 0}, {0, 0}}, PlotRange -> {{-4, 4}, {-2.5, 3}}, 
+           Axes -> False], $CellContext`robotVectorOrigin$ = {0, 
+          4}, $CellContext`topLeftPoint$ = {-$CellContext`robotWidth$$/2 + 
+           0.3, $CellContext`robotLength$$/2 - 
+           0.3}, $CellContext`topRightPoint$ = {$CellContext`robotWidth$$/2 - 
+           0.3, $CellContext`robotLength$$/2 - 
+           0.3}, $CellContext`bottomLeftPoint$ = {-$CellContext`robotWidth$$/
+            2 + 0.3, -$CellContext`robotLength$$/2 + 
+           0.3}, $CellContext`bottomRightPoint$ = {$CellContext`robotWidth$$/
+            2 - 0.3, -$CellContext`robotLength$$/2 + 
+           0.3}, $CellContext`wheelToCenterDistance$ = 
+         Sqrt[($CellContext`robotWidth$$/2 - 
+             0.3)^2 + ($CellContext`robotLength$$/2 - 
+             0.3)^2], $CellContext`translation$ = \
+{$CellContext`leftJoystickX$$, $CellContext`leftJoystickY$$}, \
+$CellContext`rotationMagnitude$ = 
+         Sqrt[$CellContext`robotWidth$$^2 + $CellContext`robotLength$$^2], \
+$CellContext`topLeftRotation$ = {$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`topRightRotation$ = \
+{$CellContext`robotLength$$, -$CellContext`robotWidth$$}, \
+$CellContext`bottomLeftRotation$ = {-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`bottomRightRotation$ = \
+{-$CellContext`robotLength$$, -$CellContext`robotWidth$$}, $CellContext`\
+\[Theta]TopLeft$ = $CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]TopRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]BottomLeft$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+              2]]], $CellContext`\[Theta]BottomRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+             
+             Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                
+                Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 2]]]}, 
+        Show[$CellContext`robot$, 
+         ListPlot[{$CellContext`topLeftPoint$, $CellContext`topRightPoint$, \
+$CellContext`bottomLeftPoint$, $CellContext`bottomRightPoint$}, 
+          PlotStyle -> {Black}], 
+         Graphics[{
+           Opacity[0.3], 
+           Circle[{0, 0}, $CellContext`wheelToCenterDistance$]}], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`topLeftPoint$, $CellContext`\
+\[Theta]TopLeft$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`topRightPoint$, $CellContext`\
+\[Theta]TopRight$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`bottomLeftPoint$, \
+$CellContext`\[Theta]BottomLeft$], Joined -> True, PlotStyle -> 
+          Opacity[0.75]], 
+         ListPlot[
+          $CellContext`getWheelPts[$CellContext`bottomRightPoint$, \
+$CellContext`\[Theta]BottomRight$], Joined -> True, PlotStyle -> 
+          Opacity[0.75]], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$}]}], 
+         Graphics[{Red, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Blue, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+         Graphics[{Purple, 
+           
+           Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}]]], 
+      "Specifications" :> {{{$CellContext`robotWidth$$, 2.7, "Robot Width"}, 
+         1.5, 4}, {{$CellContext`robotLength$$, 2.49, "Robot Length"}, 1.5, 
+         4}, {{$CellContext`leftJoystickY$$, 0.9750000000000001, 
+          "Up/Down Translation"}, -1, 
+         1}, {{$CellContext`leftJoystickX$$, -0.0050000000000000044`, 
+          "Left/Right Translation"}, -1, 
+         1}, {{$CellContext`rightJoystickX$$, -0.865, "Rotation"}, -1, 1}}, 
+      "Options" :> {}, "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{536., {308., 314.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>({$CellContext`checkIfDefined = 
+       Function[{$CellContext`val}, 
+         If[$CellContext`val === Indeterminate, 
+          0, $CellContext`val]], $CellContext`scaleRotation[
+         Pattern[$CellContext`rotVec, 
+          Blank[]], 
+         Pattern[$CellContext`x, 
+          Blank[]], 
+         Pattern[$CellContext`rotMag, 
+          
+          Blank[]]] = ($CellContext`rotVec \
+$CellContext`x)/$CellContext`rotMag, $CellContext`getWheelPts = 
+       Function[{$CellContext`point, $CellContext`\[Theta]}, 
+         Module[{$CellContext`pts = {{-0.1, 0.23}, {0.1, 0.23}, {
+            0.1, -0.23}, {-0.1, -0.23}, {-0.1, 
+            0.23}}}, $CellContext`rotate[$CellContext`pts, $CellContext`\
+\[Theta]] + {$CellContext`point, $CellContext`point, $CellContext`point, \
+$CellContext`point, $CellContext`point}]], $CellContext`rotate = 
+       Function[{$CellContext`pts, $CellContext`\[Theta]}, 
+         Table[
+          Dot[
+           Part[$CellContext`pts, $CellContext`i], 
+           $CellContext`rotationmatrix[$CellContext`\[Theta]]], \
+{$CellContext`i, 1, 5}]], $CellContext`rotationmatrix[
+         Pattern[$CellContext`\[Theta], 
+          Blank[]]] = {{
+          Cos[$CellContext`\[Theta]], 
+          Sin[$CellContext`\[Theta]]}, {-Sin[$CellContext`\[Theta]], 
+          Cos[$CellContext`\[Theta]]}}}; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Input",
+ CellChangeTimes->{{3.7864963051312976`*^9, 3.7864963072399225`*^9}, {
+   3.786496608069044*^9, 3.7864966127685876`*^9}, {3.7864966438105774`*^9, 
+   3.786496647338418*^9}, {3.7864973588853235`*^9, 3.7864973605748587`*^9}, {
+   3.786497437883604*^9, 3.786497448044502*^9}, {3.786497492624935*^9, 
+   3.7864975076577845`*^9}, {3.7864983242767663`*^9, 3.7864983271533203`*^9}, 
+   3.786498608173645*^9, 3.7864986407081366`*^9},
+ CellID->472188158,ExpressionUUID->"d2e0714e-abb8-4237-8b9e-48f3d7917712"],
+
+Cell[BoxData[
+ FormBox[
+  TagBox[
+   StyleBox[
+    DynamicModuleBox[{$CellContext`leftJoystickX$$ = 
+     0.915, $CellContext`leftJoystickY$$ = -0.515, \
+$CellContext`rightJoystickX$$ = 0, $CellContext`robotLength$$ = 
+     1.5, $CellContext`robotWidth$$ = 3.9050000000000002`, Typeset`show$$ = 
+     True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+     Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+     "\"untitled\"", Typeset`specs$$ = {{{
+        Hold[$CellContext`robotWidth$$], 1.525, "Robot Width"}, 1.5, 4}, {{
+        Hold[$CellContext`robotLength$$], 3.97, "Robot Length"}, 1.5, 4}, {{
+        Hold[$CellContext`leftJoystickY$$], -0.515, 
+        "Up/Down Translation"}, -1, 1}, {{
+        Hold[$CellContext`leftJoystickX$$], 0.915, 
+        "Left/Right Translation"}, -1, 1}, {{
+        Hold[$CellContext`rightJoystickX$$], -0.97, "Rotation"}, -1, 1}}, 
+     Typeset`size$$ = {488., {207., 213.}}, Typeset`update$$ = 0, 
+     Typeset`initDone$$, Typeset`skipInitDone$$ = 
+     False, $CellContext`robotWidth$48027$$ = 
+     0, $CellContext`robotLength$48028$$ = 
+     0, $CellContext`leftJoystickY$48029$$ = 
+     0, $CellContext`leftJoystickX$48030$$ = 
+     0, $CellContext`rightJoystickX$48031$$ = 0}, 
+     DynamicBox[Manipulate`ManipulateBoxes[
+      1, StandardForm, 
+       "Variables" :> {$CellContext`leftJoystickX$$ = 
+         0.915, $CellContext`leftJoystickY$$ = -0.515, \
+$CellContext`rightJoystickX$$ = -0.97, $CellContext`robotLength$$ = 
+         3.97, $CellContext`robotWidth$$ = 1.525}, "ControllerVariables" :> {
+         Hold[$CellContext`robotWidth$$, $CellContext`robotWidth$48027$$, 0], 
+         Hold[$CellContext`robotLength$$, $CellContext`robotLength$48028$$, 
+          0], 
+         Hold[$CellContext`leftJoystickY$$, \
+$CellContext`leftJoystickY$48029$$, 0], 
+         Hold[$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickX$48030$$, 0], 
+         Hold[$CellContext`rightJoystickX$$, \
+$CellContext`rightJoystickX$48031$$, 0]}, 
+       "OtherVariables" :> {
+        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+         Typeset`specs$$, Typeset`size$$, Typeset`update$$, 
+         Typeset`initDone$$, Typeset`skipInitDone$$}, "Body" :> 
+       Module[{$CellContext`robot$ = Graphics[{
+             FaceForm[], 
+             EdgeForm[Black], 
+             
+             Rectangle[{-$CellContext`robotWidth$$/
+               2, -$CellContext`robotLength$$/2}, {$CellContext`robotWidth$$/
+               2, $CellContext`robotLength$$/2}]}, PlotLabel -> Column[{
+               Style["Legend:", Black, FontSize -> 16], 
+               Style["Translation Vectors", Red], 
+               Style["Rotation Vectors", Blue], 
+               Style["Net Vectors", Purple], "Rotation Circle"}, Center], 
+            AxesOrigin -> {{0, 0}, {0, 0}}, PlotRange -> {{-4, 4}, {-2.5, 3}},
+             Axes -> False], $CellContext`robotVectorOrigin$ = {0, 
+           4}, $CellContext`topLeftPoint$ = {-$CellContext`robotWidth$$/2 + 
+            0.3, $CellContext`robotLength$$/2 - 
+            0.3}, $CellContext`topRightPoint$ = {$CellContext`robotWidth$$/2 - 
+            0.3, $CellContext`robotLength$$/2 - 
+            0.3}, $CellContext`bottomLeftPoint$ = {-$CellContext`robotWidth$$/
+             2 + 0.3, -$CellContext`robotLength$$/2 + 
+            0.3}, $CellContext`bottomRightPoint$ = {$CellContext`robotWidth$$/
+             2 - 0.3, -$CellContext`robotLength$$/2 + 
+            0.3}, $CellContext`wheelToCenterDistance$ = 
+          Sqrt[($CellContext`robotWidth$$/2 - 
+              0.3)^2 + ($CellContext`robotLength$$/2 - 
+              0.3)^2], $CellContext`translation$ = \
+{$CellContext`leftJoystickX$$, $CellContext`leftJoystickY$$}, \
+$CellContext`rotationMagnitude$ = 
+          Sqrt[$CellContext`robotWidth$$^2 + $CellContext`robotLength$$^2], \
+$CellContext`topLeftRotation$ = {$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`topRightRotation$ = \
+{$CellContext`robotLength$$, -$CellContext`robotWidth$$}, \
+$CellContext`bottomLeftRotation$ = {-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`bottomRightRotation$ = \
+{-$CellContext`robotLength$$, -$CellContext`robotWidth$$}, $CellContext`\
+\[Theta]TopLeft$ = $CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]TopRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]BottomLeft$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]BottomRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 2]]]}, 
+         Show[$CellContext`robot$, 
+          
+          ListPlot[{$CellContext`topLeftPoint$, $CellContext`topRightPoint$, \
+$CellContext`bottomLeftPoint$, $CellContext`bottomRightPoint$}, 
+           PlotStyle -> {Black}], 
+          Graphics[{
+            Opacity[0.3], 
+            Circle[{0, 0}, $CellContext`wheelToCenterDistance$]}], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`topLeftPoint$, $CellContext`\
+\[Theta]TopLeft$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`topRightPoint$, \
+$CellContext`\[Theta]TopRight$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`bottomLeftPoint$, \
+$CellContext`\[Theta]BottomLeft$], Joined -> True, PlotStyle -> 
+           Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`bottomRightPoint$, \
+$CellContext`\[Theta]BottomRight$], Joined -> True, PlotStyle -> 
+           Opacity[0.75]], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}]]], 
+       "Specifications" :> {{{$CellContext`robotWidth$$, 1.525, 
+           "Robot Width"}, 1.5, 
+          4}, {{$CellContext`robotLength$$, 3.97, "Robot Length"}, 1.5, 
+          4}, {{$CellContext`leftJoystickY$$, -0.515, 
+           "Up/Down Translation"}, -1, 
+          1}, {{$CellContext`leftJoystickX$$, 0.915, 
+           "Left/Right Translation"}, -1, 
+          1}, {{$CellContext`rightJoystickX$$, -0.97, "Rotation"}, -1, 1}}, 
+       "Options" :> {}, "DefaultOptions" :> {ControllerLinking -> True}],
+      ImageSizeCache->{537., {309., 315.}},
+      SingleEvaluation->True],
+     Deinitialization:>None,
+     DynamicModuleValues:>{},
+     Initialization:>({$CellContext`checkIfDefined = 
+        Function[{$CellContext`val}, 
+          
+          If[$CellContext`val === Indeterminate, 
+           0, $CellContext`val]], $CellContext`scaleRotation[
+          Pattern[$CellContext`rotVec, 
+           Blank[]], 
+          Pattern[$CellContext`x, 
+           Blank[]], 
+          Pattern[$CellContext`rotMag, 
+           
+           Blank[]]] = ($CellContext`rotVec \
+$CellContext`x)/$CellContext`rotMag, $CellContext`getWheelPts = 
+        Function[{$CellContext`point, $CellContext`\[Theta]}, 
+          
+          Module[{$CellContext`pts = {{-0.1, 0.23}, {0.1, 0.23}, {
+             0.1, -0.23}, {-0.1, -0.23}, {-0.1, 
+             
+             0.23}}}, $CellContext`rotate[$CellContext`pts, $CellContext`\
+\[Theta]] + {$CellContext`point, $CellContext`point, $CellContext`point, \
+$CellContext`point, $CellContext`point}]], $CellContext`rotate = 
+        Function[{$CellContext`pts, $CellContext`\[Theta]}, 
+          Table[
+           Dot[
+            Part[$CellContext`pts, $CellContext`i], 
+            $CellContext`rotationmatrix[$CellContext`\[Theta]]], \
+{$CellContext`i, 1, 5}]], $CellContext`rotationmatrix[
+          Pattern[$CellContext`\[Theta], 
+           Blank[]]] = {{
+           Cos[$CellContext`\[Theta]], 
+           Sin[$CellContext`\[Theta]]}, {-Sin[$CellContext`\[Theta]], 
+           Cos[$CellContext`\[Theta]]}}}; Typeset`initDone$$ = True),
+     SynchronousInitialization->True,
+     UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+     UnsavedVariables:>{Typeset`initDone$$},
+     UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+    Deployed->True,
+    StripOnInput->False],
+   Manipulate`InterpretManipulate[1]], InputForm]], "Input",
+ CellChangeTimes->{{3.78649749418839*^9, 3.78649749420662*^9}, 
+   3.7864975305297475`*^9},
+ CellID->413426671,ExpressionUUID->"f04f7fb2-8df7-4efe-9d50-817a3588e676"],
+
+Cell[BoxData[
+ FormBox[
+  TagBox[
+   StyleBox[
+    DynamicModuleBox[{$CellContext`leftJoystickX$$ = -0.0050000000000000044`, \
+$CellContext`leftJoystickY$$ = 
+     0.9750000000000001, $CellContext`rightJoystickX$$ = -0.865, \
+$CellContext`robotLength$$ = 2.49, $CellContext`robotWidth$$ = 2.7, 
+     Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+     Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+        Hold[$CellContext`robotWidth$$], 1.525, "Robot Width"}, 1.5, 4}, {{
+        Hold[$CellContext`robotLength$$], 3.97, "Robot Length"}, 1.5, 4}, {{
+        Hold[$CellContext`leftJoystickY$$], -0.515, 
+        "Up/Down Translation"}, -1, 1}, {{
+        Hold[$CellContext`leftJoystickX$$], 0.915, 
+        "Left/Right Translation"}, -1, 1}, {{
+        Hold[$CellContext`rightJoystickX$$], -0.97, "Rotation"}, -1, 1}}, 
+     Typeset`size$$ = {488., {207., 213.}}, Typeset`update$$ = 0, 
+     Typeset`initDone$$, Typeset`skipInitDone$$ = 
+     False, $CellContext`robotWidth$48027$$ = 
+     0, $CellContext`robotLength$48028$$ = 
+     0, $CellContext`leftJoystickY$48029$$ = 
+     0, $CellContext`leftJoystickX$48030$$ = 
+     0, $CellContext`rightJoystickX$48031$$ = 0}, 
+     DynamicBox[Manipulate`ManipulateBoxes[
+      1, StandardForm, 
+       "Variables" :> {$CellContext`leftJoystickX$$ = 
+         0.915, $CellContext`leftJoystickY$$ = -0.515, \
+$CellContext`rightJoystickX$$ = -0.97, $CellContext`robotLength$$ = 
+         3.97, $CellContext`robotWidth$$ = 1.525}, "ControllerVariables" :> {
+         Hold[$CellContext`robotWidth$$, $CellContext`robotWidth$48027$$, 0], 
+         Hold[$CellContext`robotLength$$, $CellContext`robotLength$48028$$, 
+          0], 
+         Hold[$CellContext`leftJoystickY$$, \
+$CellContext`leftJoystickY$48029$$, 0], 
+         Hold[$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickX$48030$$, 0], 
+         Hold[$CellContext`rightJoystickX$$, \
+$CellContext`rightJoystickX$48031$$, 0]}, 
+       "OtherVariables" :> {
+        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+         Typeset`specs$$, Typeset`size$$, Typeset`update$$, 
+         Typeset`initDone$$, Typeset`skipInitDone$$}, "Body" :> 
+       Module[{$CellContext`robot$ = Graphics[{
+             FaceForm[], 
+             EdgeForm[Black], 
+             
+             Rectangle[{-$CellContext`robotWidth$$/
+               2, -$CellContext`robotLength$$/2}, {$CellContext`robotWidth$$/
+               2, $CellContext`robotLength$$/2}]}, PlotLabel -> Column[{
+               Style["Legend:", Black, FontSize -> 16], 
+               Style["Translation Vectors", Red], 
+               Style["Rotation Vectors", Blue], 
+               Style["Net Vectors", Purple], "Rotation Circle"}, Center], 
+            AxesOrigin -> {{0, 0}, {0, 0}}, PlotRange -> {{-4, 4}, {-2.5, 3}},
+             Axes -> False], $CellContext`robotVectorOrigin$ = {0, 
+           4}, $CellContext`topLeftPoint$ = {-$CellContext`robotWidth$$/2 + 
+            0.3, $CellContext`robotLength$$/2 - 
+            0.3}, $CellContext`topRightPoint$ = {$CellContext`robotWidth$$/2 - 
+            0.3, $CellContext`robotLength$$/2 - 
+            0.3}, $CellContext`bottomLeftPoint$ = {-$CellContext`robotWidth$$/
+             2 + 0.3, -$CellContext`robotLength$$/2 + 
+            0.3}, $CellContext`bottomRightPoint$ = {$CellContext`robotWidth$$/
+             2 - 0.3, -$CellContext`robotLength$$/2 + 
+            0.3}, $CellContext`wheelToCenterDistance$ = 
+          Sqrt[($CellContext`robotWidth$$/2 - 
+              0.3)^2 + ($CellContext`robotLength$$/2 - 
+              0.3)^2], $CellContext`translation$ = \
+{$CellContext`leftJoystickX$$, $CellContext`leftJoystickY$$}, \
+$CellContext`rotationMagnitude$ = 
+          Sqrt[$CellContext`robotWidth$$^2 + $CellContext`robotLength$$^2], \
+$CellContext`topLeftRotation$ = {$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`topRightRotation$ = \
+{$CellContext`robotLength$$, -$CellContext`robotWidth$$}, \
+$CellContext`bottomLeftRotation$ = {-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`bottomRightRotation$ = \
+{-$CellContext`robotLength$$, -$CellContext`robotWidth$$}, $CellContext`\
+\[Theta]TopLeft$ = $CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]TopRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]BottomLeft$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 
+               2]]], $CellContext`\[Theta]BottomRight$ = \
+$CellContext`checkIfDefined[Pi/2 + ArcTan[
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 1], 
+              
+              Part[{$CellContext`leftJoystickX$$, \
+$CellContext`leftJoystickY$$} + \
+$CellContext`scaleRotation[{-$CellContext`robotLength$$, \
+-$CellContext`robotWidth$$}, $CellContext`rightJoystickX$$, 
+                 
+                 Sqrt[$CellContext`robotWidth$$^2 + \
+$CellContext`robotLength$$^2]], 2]]]}, 
+         Show[$CellContext`robot$, 
+          
+          ListPlot[{$CellContext`topLeftPoint$, $CellContext`topRightPoint$, \
+$CellContext`bottomLeftPoint$, $CellContext`bottomRightPoint$}, 
+           PlotStyle -> {Black}], 
+          Graphics[{
+            Opacity[0.3], 
+            Circle[{0, 0}, $CellContext`wheelToCenterDistance$]}], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`topLeftPoint$, $CellContext`\
+\[Theta]TopLeft$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`topRightPoint$, \
+$CellContext`\[Theta]TopRight$], Joined -> True, PlotStyle -> Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`bottomLeftPoint$, \
+$CellContext`\[Theta]BottomLeft$], Joined -> True, PlotStyle -> 
+           Opacity[0.75]], 
+          ListPlot[
+           $CellContext`getWheelPts[$CellContext`bottomRightPoint$, \
+$CellContext`\[Theta]BottomRight$], Joined -> True, PlotStyle -> 
+           Opacity[0.75]], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$}]}], 
+          Graphics[{Red, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Blue, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`topLeftPoint$, $CellContext`topLeftPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`topRightPoint$, $CellContext`topRightPoint$ + \
+$CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`topRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`bottomLeftPoint$, \
+$CellContext`bottomLeftPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomLeftRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}], 
+          Graphics[{Purple, 
+            
+            Arrow[{$CellContext`bottomRightPoint$, \
+$CellContext`bottomRightPoint$ + $CellContext`translation$ + \
+$CellContext`scaleRotation[$CellContext`bottomRightRotation$, \
+$CellContext`rightJoystickX$$, $CellContext`rotationMagnitude$]}]}]]], 
+       "Specifications" :> {{{$CellContext`robotWidth$$, 1.525, 
+           "Robot Width"}, 1.5, 
+          4}, {{$CellContext`robotLength$$, 3.97, "Robot Length"}, 1.5, 
+          4}, {{$CellContext`leftJoystickY$$, -0.515, 
+           "Up/Down Translation"}, -1, 
+          1}, {{$CellContext`leftJoystickX$$, 0.915, 
+           "Left/Right Translation"}, -1, 
+          1}, {{$CellContext`rightJoystickX$$, -0.97, "Rotation"}, -1, 1}}, 
+       "Options" :> {}, "DefaultOptions" :> {ControllerLinking -> True}],
+      ImageSizeCache->{537., {309., 315.}},
+      SingleEvaluation->True],
+     Deinitialization:>None,
+     DynamicModuleValues:>{},
+     Initialization:>({$CellContext`checkIfDefined = 
+        Function[{$CellContext`val}, 
+          
+          If[$CellContext`val === Indeterminate, 
+           0, $CellContext`val]], $CellContext`scaleRotation[
+          Pattern[$CellContext`rotVec, 
+           Blank[]], 
+          Pattern[$CellContext`x, 
+           Blank[]], 
+          Pattern[$CellContext`rotMag, 
+           
+           Blank[]]] = ($CellContext`rotVec \
+$CellContext`x)/$CellContext`rotMag, $CellContext`getWheelPts = 
+        Function[{$CellContext`point, $CellContext`\[Theta]}, 
+          
+          Module[{$CellContext`pts = {{-0.1, 0.23}, {0.1, 0.23}, {
+             0.1, -0.23}, {-0.1, -0.23}, {-0.1, 
+             
+             0.23}}}, $CellContext`rotate[$CellContext`pts, $CellContext`\
+\[Theta]] + {$CellContext`point, $CellContext`point, $CellContext`point, \
+$CellContext`point, $CellContext`point}]], $CellContext`rotate = 
+        Function[{$CellContext`pts, $CellContext`\[Theta]}, 
+          Table[
+           Dot[
+            Part[$CellContext`pts, $CellContext`i], 
+            $CellContext`rotationmatrix[$CellContext`\[Theta]]], \
+{$CellContext`i, 1, 5}]], $CellContext`rotationmatrix[
+          Pattern[$CellContext`\[Theta], 
+           Blank[]]] = {{
+           Cos[$CellContext`\[Theta]], 
+           Sin[$CellContext`\[Theta]]}, {-Sin[$CellContext`\[Theta]], 
+           Cos[$CellContext`\[Theta]]}}}; Typeset`initDone$$ = True),
+     SynchronousInitialization->True,
+     UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+     UnsavedVariables:>{Typeset`initDone$$},
+     UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+    Deployed->True,
+    StripOnInput->False],
+   Manipulate`InterpretManipulate[1]], InputForm]], "Input",
+ CellChangeTimes->{{3.786497495265597*^9, 3.7864974952829933`*^9}, 
+   3.7864975530928383`*^9, {3.7864978901686845`*^9, 3.786497893645503*^9}},
+ CellID->272112462,ExpressionUUID->"1894197f-1351-412a-a88f-fd5fed80fd56"]
+}, Open  ]],
+
+Cell["", "DetailsSection",ExpressionUUID->"062ceada-834f-4c85-9945-45bfdb57fe90"],
+
+Cell[CellGroupData[{
+
+Cell["", "ControlSuggestionsSection",ExpressionUUID->"61145f31-6bb0-445a-8829-329126cd5288"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[True], Cell[
+   " Resize Images",ExpressionUUID->"2e77098c-42f4-45dd-aa9d-5ddc8a98d6df"]}],
+  "\"Click inside an image to reveal its orange resize frame.\\nDrag any of \
+the orange resize handles to resize the image.\"",
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{{3.7864939388341627`*^9, 3.786493958591116*^9}},
+ FontFamily->"Verdana",
+ CellTags->
+  "ResizeImages",ExpressionUUID->"ae1ddbe1-f0a8-4780-8614-8ad680d8ba7c"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Rotate and Zoom in 3D",ExpressionUUID->
+    "2ef28668-841f-4520-b76a-c11a79c70847"]}],
+  RowBox[{
+   "\"Drag a 3D graphic to rotate it. Starting the drag near the center \
+tumbles\\nthe graphic; starting near a corner turns it parallel to the plane \
+of the screen.\\nHold down \"", 
+    FrameBox[
+    "Ctrl", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" (or \"", 
+    FrameBox[
+    "Cmd", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" on Mac) and drag up and down to zoom.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "RotateAndZoomIn3D",ExpressionUUID->"41005847-7341-413a-a646-06664f983285"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Drag Locators",ExpressionUUID->"502dec60-2cfe-49a8-8e67-29b477daa6c3"]}],
+  RowBox[{"\"Drag any locator (\"", 
+    GraphicsBox[
+     LocatorBox[
+      Scaled[{0.5, 0.5}]], ImageSize -> 20], 
+    "\", etc.) to move it around.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "DragLocators",ExpressionUUID->"0a9e743d-c72c-4ae6-aeba-c47f1c56379c"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Create and Delete Locators",ExpressionUUID->
+    "0c8fb375-fdd5-416a-9729-917e51c40954"]}],
+  RowBox[{"\"Insert a new locator in the graphic by holding down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], 
+    "\" key\\nand clicking where you want it to be. Delete a locator by \
+clicking it\\nwhile holding down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" key.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "CreateAndDeleteLocators",ExpressionUUID->"386aec2f-8216-4a86-a567-\
+0d63c8ade194"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Slider Zoom",ExpressionUUID->"9d2ebf98-0d19-46e1-9ad3-f4cce36ad2b2"]}],
+  RowBox[{"\"Hold down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], 
+    "\" key while moving a slider to make fine adjustments in the slider \
+value.\\nHold \"", 
+    FrameBox[
+    "Ctrl", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" and/or \"", 
+    FrameBox[
+    "Shift", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" at the same time as \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" to make ever finer adjustments.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "SliderZoom",ExpressionUUID->"1bba7e5e-be66-4544-a126-9b1636db011d"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Gamepad Controls",ExpressionUUID->
+    "ad9d2b6d-94b4-415f-931a-e63a80177d3b"]}],
+  "\"Control this Demonstration with a gamepad or other\\nhuman interface \
+device connected to your computer.\"",
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{3.35696210375764*^9, 3.3895522232313623`*^9},
+ FontFamily->"Verdana",
+ CellTags->
+  "GamepadControls",ExpressionUUID->"124fbbc9-ac78-46b9-9def-42a4bf41ae48"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Automatic Animation",ExpressionUUID->
+    "9b5a01d1-4fa7-40b0-bb61-f80a8fd946a5"]}],
+  RowBox[{"\"Animate a slider in this Demonstration by clicking the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJzzTSzJSM1NLMlMTlRwL0osyMhMLlZwyy8CCjEzMjAwcIKwAgOI/R/IhBKc\n\
+/4EAyGAG0f+nTZsGwgysIJIRKsWKLAXGIHFmEpUgLADxWUAkI24jZs+eTaEt\n\
+IG+wQKRmzJgBlYf5lhEA30OqWA=="], "Graphics", ImageSize -> {9, 9}, ImageMargins -> 
+      0, CellBaseline -> Baseline], BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"button\\nnext to the slider, and then clicking the play button that \
+appears.\\nAnimate all controls by selecting \"", 
+    StyleBox["Autorun", FontWeight -> "Bold"], "\" from the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJyNULENwyAQfEySIlMwTVJlCGRFsosokeNtqBmDBagoaZjAI1C8/8GUUUC6\n\
+57h7cQ8PvU7Pl17nUav7oj/TPH7V7b2QJAUAXBkKmCPRowxICy64bRvGGNF7\n\
+X8CctGoDSN4xhIDGGDhzFXwUh3/ClBKrDQPmnGXtI6u0OOd+tZBVUqy1xSaH\n\
+UqiK6pPe4XdEdAz6563tx/gejuORGMxJaz8mdpJn7hc="], "Graphics", 
+      ImageSize -> {10, 10}, ImageMargins -> 0, CellBaseline -> Baseline], 
+     BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"menu.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "AutomaticAnimation",ExpressionUUID->"2f74bc52-c932-4815-a1f5-95abff57bd72"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[
+   " Bookmark Animation",ExpressionUUID->
+    "62eeaed2-1401-429f-89d8-d8edb31596ea"]}],
+  RowBox[{
+   "\"See a prepared animation of this Demonstration by selecting\\n\"", 
+    StyleBox["Animate Bookmarks", FontWeight -> "Bold"], "\" from the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJyNULENwyAQfEySIlMwTVJlCGRFsosokeNtqBmDBagoaZjAI1C8/8GUUUC6\n\
+57h7cQ8PvU7Pl17nUav7oj/TPH7V7b2QJAUAXBkKmCPRowxICy64bRvGGNF7\n\
+X8CctGoDSN4xhIDGGDhzFXwUh3/ClBKrDQPmnGXtI6u0OOd+tZBVUqy1xSaH\n\
+UqiK6pPe4XdEdAz6563tx/gejuORGMxJaz8mdpJn7hc="], "Graphics", 
+      ImageSize -> {10, 10}, ImageMargins -> 0, CellBaseline -> Baseline], 
+     BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"menu.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->
+  "BookmarkAnimation",ExpressionUUID->"a50b1f1e-6f31-4f35-aac4-375dbd7a0859"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "SearchTermsSection",ExpressionUUID->"266252bd-49b1-46e5-a093-b3b8f26e9682"],
+
+Cell["robot", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940285579567`*^9}},
+ CellID->399923418,ExpressionUUID->"b1932b0c-e19a-4948-8ee8-2cf02eda1bf6"],
+
+Cell["robotics", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940322041516`*^9}},
+ CellID->934282286,ExpressionUUID->"05ad5426-8a74-4d62-a141-42fa1caaaace"],
+
+Cell["drive", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940333322926`*^9}},
+ CellID->49028864,ExpressionUUID->"7f7b84a0-0763-415e-b993-e46435ed2c33"],
+
+Cell["drivetrain", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940351706405`*^9}},
+ CellID->564395704,ExpressionUUID->"779dceee-71b7-4952-aa8a-d6a6614d10de"],
+
+Cell["swerve", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.786494036599881*^9}, {
+  3.7864940806632032`*^9, 3.7864940806632032`*^9}},
+ CellID->168063564,ExpressionUUID->"dff4dbc2-d754-48ba-8381-bb89e486c286"],
+
+Cell["swerve module", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.786494036599881*^9}, {
+  3.7864940809277687`*^9, 3.7864940822079115`*^9}},
+ CellID->253604709,ExpressionUUID->"444b0dcc-968b-4371-a1c2-63fe24fe8096"],
+
+Cell["FRC", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940374291615`*^9}},
+ CellID->17942341,ExpressionUUID->"35d9533c-8fba-4358-9977-89917c44d2b2"],
+
+Cell["first", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940408591185`*^9}},
+ CellID->356330348,ExpressionUUID->"3009c20b-81f1-476c-844b-a20b139d730f"],
+
+Cell["first robotics competition", "SearchTerms",
+ CellChangeTimes->{{3.7864940279191628`*^9, 3.7864940774509354`*^9}},
+ CellID->544271923,ExpressionUUID->"b70c2517-f7f0-4861-9221-3769379862cc"]
+}, Open  ]],
+
+Cell["", "RelatedLinksSection",ExpressionUUID->"24bff97b-86f0-4001-9d00-6ebf390d9839"],
+
+Cell[CellGroupData[{
+
+Cell["", "AuthorSection",ExpressionUUID->"c240d3ba-a1fc-40a8-a976-eccdd0ddb9ae"],
+
+Cell["Contributed by: Jatin Kohli", "Author",
+ CellChangeTimes->{{3.7864941051590185`*^9, 3.7864941055691233`*^9}, {
+  3.7864941738322024`*^9, 
+  3.7864941749762526`*^9}},ExpressionUUID->"2082e3dc-7770-4134-8b90-\
+ae0fbf4c6ba6"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1536, 821},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"11.3 for Microsoft Windows (64-bit) (March 6, 2018)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Demonstration.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "AutomaticAnimation"->{
+  Cell[94258, 2126, 1586, 34, 22, "ControlSuggestions",ExpressionUUID->"2f74bc52-c932-4815-a1f5-95abff57bd72",
+   CellTags->"AutomaticAnimation"]},
+ "BookmarkAnimation"->{
+  Cell[95847, 2162, 1030, 24, 22, "ControlSuggestions",ExpressionUUID->"a50b1f1e-6f31-4f35-aac4-375dbd7a0859",
+   CellTags->"BookmarkAnimation"]},
+ "CreateAndDeleteLocators"->{
+  Cell[92036, 2066, 761, 19, 22, "ControlSuggestions",ExpressionUUID->"386aec2f-8216-4a86-a567-0d63c8ade194",
+   CellTags->"CreateAndDeleteLocators"]},
+ "DragLocators"->{
+  Cell[91576, 2051, 457, 13, 22, "ControlSuggestions",ExpressionUUID->"0a9e743d-c72c-4ae6-aeba-c47f1c56379c",
+   CellTags->"DragLocators"]},
+ "GamepadControls"->{
+  Cell[93764, 2112, 491, 12, 22, "ControlSuggestions",ExpressionUUID->"124fbbc9-ac78-46b9-9def-42a4bf41ae48",
+   CellTags->"GamepadControls"]},
+ "ResizeImages"->{
+  Cell[90274, 2017, 496, 11, 22, "ControlSuggestions",ExpressionUUID->"ae1ddbe1-f0a8-4780-8614-8ad680d8ba7c",
+   CellTags->"ResizeImages"]},
+ "RotateAndZoomIn3D"->{
+  Cell[90773, 2030, 800, 19, 22, "ControlSuggestions",ExpressionUUID->"41005847-7341-413a-a646-06664f983285",
+   CellTags->"RotateAndZoomIn3D"]},
+ "SliderZoom"->{
+  Cell[92800, 2087, 961, 23, 22, "ControlSuggestions",ExpressionUUID->"1bba7e5e-be66-4544-a126-9b1636db011d",
+   CellTags->"SliderZoom"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"AutomaticAnimation", 99558, 2257},
+ {"BookmarkAnimation", 99730, 2260},
+ {"CreateAndDeleteLocators", 99907, 2263},
+ {"DragLocators", 100078, 2266},
+ {"GamepadControls", 100241, 2269},
+ {"ResizeImages", 100404, 2272},
+ {"RotateAndZoomIn3D", 100569, 2275},
+ {"SliderZoom", 100732, 2278}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 195, 3, 74, "DemoTitle",ExpressionUUID->"91d07b9b-e441-47eb-866f-134375af8b49"],
+Cell[CellGroupData[{
+Cell[800, 29, 88, 0, 275, "InitializationSection",ExpressionUUID->"71ca1341-15a2-4375-b097-704942d0e529"],
+Cell[891, 31, 5831, 150, 736, "Input",ExpressionUUID->"e9070128-af01-4d59-a0ac-8552ff0baffd",
+ InitializationCell->True,
+ CellID->37113198]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6759, 186, 84, 0, 231, "ManipulateSection",ExpressionUUID->"84a5236f-fdbf-4f50-85f9-5214a130b60c"],
+Cell[CellGroupData[{
+Cell[6868, 190, 22383, 544, 1644, "Input",ExpressionUUID->"681f5224-0dcc-4344-881e-1f337a09c2b7"],
+Cell[29254, 736, 13447, 281, 630, "Output",ExpressionUUID->"dcdc4b63-eee5-4c11-bee6-5fca0040dfe5",
+ CellID->133708870]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42750, 1023, 91, 0, 169, "ManipulateCaptionSection",ExpressionUUID->"b5b3bd13-ab84-4477-99b3-77a3e64c0224"],
+Cell[42844, 1025, 1442, 20, 67, "ManipulateCaption",ExpressionUUID->"da6e7c23-c5bf-43c7-9fec-f960737dc4b0",
+ CellID->87092621]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44323, 1050, 83, 0, 172, "ThumbnailSection",ExpressionUUID->"a8d36387-e509-43d0-9a95-0ca8140b2784"],
+Cell[44409, 1052, 4212, 82, 342, "Output",ExpressionUUID->"fad33bfa-7ffd-449d-886e-00b9b7e5fd52"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48658, 1139, 83, 0, 142, "SnapshotsSection",ExpressionUUID->"e422ee72-883d-4137-9663-f64ac8edbeec"],
+Cell[48744, 1141, 13872, 287, 635, InheritFromParent,ExpressionUUID->"d2e0714e-abb8-4237-8b9e-48f3d7917712",
+ CellID->472188158],
+Cell[62619, 1430, 13684, 288, 637, InheritFromParent,ExpressionUUID->"f04f7fb2-8df7-4efe-9d50-817a3588e676",
+ CellID->413426671],
+Cell[76306, 1720, 13752, 288, 637, InheritFromParent,ExpressionUUID->"1894197f-1351-412a-a88f-fd5fed80fd56",
+ CellID->272112462]
+}, Open  ]],
+Cell[90073, 2011, 81, 0, 339, "DetailsSection",ExpressionUUID->"062ceada-834f-4c85-9945-45bfdb57fe90"],
+Cell[CellGroupData[{
+Cell[90179, 2015, 92, 0, 114, "ControlSuggestionsSection",ExpressionUUID->"61145f31-6bb0-445a-8829-329126cd5288"],
+Cell[90274, 2017, 496, 11, 22, "ControlSuggestions",ExpressionUUID->"ae1ddbe1-f0a8-4780-8614-8ad680d8ba7c",
+ CellTags->"ResizeImages"],
+Cell[90773, 2030, 800, 19, 22, "ControlSuggestions",ExpressionUUID->"41005847-7341-413a-a646-06664f983285",
+ CellTags->"RotateAndZoomIn3D"],
+Cell[91576, 2051, 457, 13, 22, "ControlSuggestions",ExpressionUUID->"0a9e743d-c72c-4ae6-aeba-c47f1c56379c",
+ CellTags->"DragLocators"],
+Cell[92036, 2066, 761, 19, 22, "ControlSuggestions",ExpressionUUID->"386aec2f-8216-4a86-a567-0d63c8ade194",
+ CellTags->"CreateAndDeleteLocators"],
+Cell[92800, 2087, 961, 23, 22, "ControlSuggestions",ExpressionUUID->"1bba7e5e-be66-4544-a126-9b1636db011d",
+ CellTags->"SliderZoom"],
+Cell[93764, 2112, 491, 12, 22, "ControlSuggestions",ExpressionUUID->"124fbbc9-ac78-46b9-9def-42a4bf41ae48",
+ CellTags->"GamepadControls"],
+Cell[94258, 2126, 1586, 34, 22, "ControlSuggestions",ExpressionUUID->"2f74bc52-c932-4815-a1f5-95abff57bd72",
+ CellTags->"AutomaticAnimation"],
+Cell[95847, 2162, 1030, 24, 22, "ControlSuggestions",ExpressionUUID->"a50b1f1e-6f31-4f35-aac4-375dbd7a0859",
+ CellTags->"BookmarkAnimation"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[96914, 2191, 85, 0, 158, "SearchTermsSection",ExpressionUUID->"266252bd-49b1-46e5-a093-b3b8f26e9682"],
+Cell[97002, 2193, 173, 2, 22, "SearchTerms",ExpressionUUID->"b1932b0c-e19a-4948-8ee8-2cf02eda1bf6",
+ CellID->399923418],
+Cell[97178, 2197, 176, 2, 22, "SearchTerms",ExpressionUUID->"05ad5426-8a74-4d62-a141-42fa1caaaace",
+ CellID->934282286],
+Cell[97357, 2201, 172, 2, 22, "SearchTerms",ExpressionUUID->"7f7b84a0-0763-415e-b993-e46435ed2c33",
+ CellID->49028864],
+Cell[97532, 2205, 178, 2, 22, "SearchTerms",ExpressionUUID->"779dceee-71b7-4952-aa8a-d6a6614d10de",
+ CellID->564395704],
+Cell[97713, 2209, 225, 3, 22, "SearchTerms",ExpressionUUID->"dff4dbc2-d754-48ba-8381-bb89e486c286",
+ CellID->168063564],
+Cell[97941, 2214, 232, 3, 22, "SearchTerms",ExpressionUUID->"444b0dcc-968b-4371-a1c2-63fe24fe8096",
+ CellID->253604709],
+Cell[98176, 2219, 170, 2, 22, "SearchTerms",ExpressionUUID->"35d9533c-8fba-4358-9977-89917c44d2b2",
+ CellID->17942341],
+Cell[98349, 2223, 173, 2, 22, "SearchTerms",ExpressionUUID->"3009c20b-81f1-476c-844b-a20b139d730f",
+ CellID->356330348],
+Cell[98525, 2227, 194, 2, 22, "SearchTerms",ExpressionUUID->"b70c2517-f7f0-4861-9221-3769379862cc",
+ CellID->544271923]
+}, Open  ]],
+Cell[98734, 2232, 86, 0, 143, "RelatedLinksSection",ExpressionUUID->"24bff97b-86f0-4001-9d00-6ebf390d9839"],
+Cell[CellGroupData[{
+Cell[98845, 2236, 80, 0, 129, "AuthorSection",ExpressionUUID->"c240d3ba-a1fc-40a8-a976-eccdd0ddb9ae"],
+Cell[98928, 2238, 228, 4, 22, "Author",ExpressionUUID->"2082e3dc-7770-4134-8b90-ae0fbf4c6ba6"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,862 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     30896,        854]
+NotebookOptionsPosition[     30345,        836]
+NotebookOutlinePosition[     30688,        851]
+CellTagsIndexPosition[     30645,        848]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Functional", " ", "Cat", " ", "Clock"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Jatin", " ", "Kohli"}], ",", " ", 
+    RowBox[{"P5", " ", "Discrete", " ", "Math"}]}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Sorry", " ", "for", " ", "spagetti", " ", 
+     RowBox[{"code", " ", ":"}]}], ")"}], "*)"}]}]], "Input",
+ CellChangeTimes->{{3.788122998064602*^9, 
+  3.788123000973005*^9}},ExpressionUUID->"e1dbbe5e-e3cc-4df0-8d2a-\
+fe08c059f9f4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getPos", " ", "=", " ", 
+    RowBox[{"Function", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"x", ",", "y", ",", "len", ",", "\[Theta]"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"x", "+", 
+         RowBox[{"len", " ", "*", 
+          RowBox[{"Cos", "[", "\[Theta]", "]"}]}]}], ",", 
+        RowBox[{"y", " ", "+", " ", 
+         RowBox[{"len", "*", 
+          RowBox[{"Sin", "[", "\[Theta]", "]"}]}]}]}], "}"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"hourHandLength", " ", "=", " ", "0.7"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"minuteHandLength", " ", "=", " ", "0.8"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"currentTimeInMins", " ", "=", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"If", " ", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"TimeObject", "[", "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "\[GreaterEqual]", "12"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"TimeObject", "[", "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "-", "12"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"TimeObject", "[", "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ")"}], "*", "60"}], "+", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"TimeObject", "[", "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "+", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"TimeObject", "[", "]"}], "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", "3", "]"}], "]"}], "/", "60"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Show", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ParametricPlot", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"t", "+", "5"}], ",", "r"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", 
+         RowBox[{"-", "0.37"}], ",", "0.37"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"r", ",", 
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"5", "t"}], ")"}], "2"], "+", "1"}], ",", "5"}], "}"}], 
+       ",", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0", ",", "10"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", "10"}], "}"}]}], "}"}]}], ",", 
+       RowBox[{"AxesOrigin", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Black", ",", " ", 
+          RowBox[{"Opacity", "[", "1", "]"}]}], "}"}]}]}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ParametricPlot", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"t", "+", "5"}], ",", "r"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", 
+         RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"r", ",", "6.5", ",", 
+         RowBox[{
+          RowBox[{"-", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"0.6", "t"}], ")"}], "2"]}], "+", "6.9"}]}], "}"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Black", ",", " ", 
+          RowBox[{"Opacity", "[", "1", "]"}], ",", 
+          RowBox[{"EdgeForm", "[", "Black", "]"}]}], "}"}]}]}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"Black", ",", 
+        RowBox[{"Rectangle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"3.95", ",", "4"}], "}"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"6.05", ",", "6.7"}], "}"}], ",", 
+          RowBox[{"RoundingRadius", "\[Rule]", "0.3"}]}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"Black", ",", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5", ",", "7.8"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"1.3", ",", "1.2"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"0.85", "*", 
+            RowBox[{"Cos", "[", "t", "]"}]}], " ", "+", " ", "5"}], ",", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"-", "0.25"}], " ", "*", "0.85", "*", " ", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"2", "t"}], "]"}]}], " ", "+", " ", "6.9"}]}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", "0", ",", 
+          RowBox[{"2", "*", "Pi"}]}], "}"}], ",", " ", 
+        RowBox[{"PlotStyle", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"Gray", ",", 
+           RowBox[{"Opacity", "[", "1", "]"}]}], "}"}]}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"White", ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5", ",", "7.7"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.9", ",", "0.55"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"Rectangle", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"4", ",", "7.7"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"6", ",", "8.5"}], "}"}]}], "]"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.5", ",", "8.2"}], "}"}], ",", "0.35"}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.5", ",", "8.2"}], "}"}], ",", "0.35"}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", 
+        RowBox[{"Circle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5", ",", "5.5"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.6", ",", "0.9"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.15", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.3", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.45", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.6", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.45", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.6", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.75", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.9", ",", "4.2"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.05", ",", "0.1"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.25", ",", "5.75"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.27", ",", "5.95"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.4", ",", "6.15"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"4.55", ",", "6.35"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.75", ",", "5.75"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.73", ",", "5.95"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.6", ",", "6.15"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", " ", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5.45", ",", "6.35"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.05"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"Black", ",", " ", 
+        RowBox[{"Triangle", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"3.9", ",", "8.3"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"4.6", ",", "8.8"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"4.25", ",", "9.2"}], "}"}]}], "}"}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"Black", ",", " ", 
+        RowBox[{"Triangle", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"6.1", ",", "8.3"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"5.4", ",", "8.8"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"5.75", ",", "9.2"}], "}"}]}], "}"}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"t", "+", "5"}], ",", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", "t", ")"}], "2"], "+", "7.2"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{"-", "0.6"}], ",", "0.6"}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"1.3", "*", "t"}], "+", "5"}], ",", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", "t", ")"}], "2"], "+", "7.4"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{"-", "0.5"}], ",", "0.5"}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"White", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"Black", ",", 
+        RowBox[{"Disk", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"5", ",", "7.7"}], "}"}], ",", "0.2"}], "]"}]}], "}"}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Cos", "[", "t", "]"}]}], " ", "+", " ", "5.1", " ", "+", 
+           " ", 
+           RowBox[{"0.1", "*", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"2", "*", "Pi", "*", 
+              RowBox[{"time", "/", "5"}]}], "]"}]}]}], ",", 
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Sin", "[", "t", "]"}]}], " ", "+", " ", "8.2"}]}], "}"}],
+         ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{
+           RowBox[{"-", "Pi"}], "/", "5"}], ",", 
+          RowBox[{"Pi", "/", "5"}]}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Cos", "[", "t", "]"}]}], " ", "+", " ", "5.91", " ", "+",
+            " ", 
+           RowBox[{"0.1", "*", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"2", "*", "Pi", "*", 
+              RowBox[{"time", "/", "5"}]}], "]"}]}]}], ",", 
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Sin", "[", "t", "]"}]}], " ", "+", " ", "8.2"}]}], "}"}],
+         ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{"4", "*", 
+           RowBox[{"Pi", "/", "5"}]}], ",", 
+          RowBox[{"6", "*", 
+           RowBox[{"Pi", "/", "5"}]}]}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Cos", "[", "t", "]"}]}], " ", "+", " ", "4.1", " ", "+", 
+           " ", 
+           RowBox[{"0.1", "*", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"2", "*", "Pi", "*", 
+              RowBox[{"time", "/", "5"}]}], "]"}]}]}], ",", 
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Sin", "[", "t", "]"}]}], " ", "+", " ", "8.2"}]}], "}"}],
+         ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{
+           RowBox[{"-", "Pi"}], "/", "5"}], ",", 
+          RowBox[{"Pi", "/", "5"}]}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ParametricPlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Cos", "[", "t", "]"}]}], " ", "+", " ", "4.91", " ", "+",
+            " ", 
+           RowBox[{"0.1", "*", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"2", "*", "Pi", "*", 
+              RowBox[{"time", "/", "5"}]}], "]"}]}]}], ",", 
+          RowBox[{
+           RowBox[{"0.5", "*", 
+            RowBox[{"Sin", "[", "t", "]"}]}], " ", "+", " ", "8.2"}]}], "}"}],
+         ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", 
+          RowBox[{"4", "*", 
+           RowBox[{"Pi", "/", "5"}]}], ",", 
+          RowBox[{"6", "*", 
+           RowBox[{"Pi", "/", "5"}]}]}], "}"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Line", "[", "l_List", "]"}], "\[RuleDelayed]", 
+       RowBox[{"{", 
+        RowBox[{"Black", ",", 
+         RowBox[{"Opacity", "[", "1", "]"}], ",", 
+         RowBox[{"Polygon", "[", "l", "]"}]}], "}"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", 
+        RowBox[{"Thickness", "[", "0.01", "]"}], ",", 
+        RowBox[{"Arrow", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"5", ",", "5.5"}], "}"}], ",", 
+           RowBox[{"getPos", "[", 
+            RowBox[{"5", ",", "5.5", ",", "hourHandLength", ",", 
+             RowBox[{
+              RowBox[{"Pi", "/", "2"}], "-", 
+              RowBox[{"time", " ", "*", 
+               RowBox[{"Pi", "/", "360"}]}]}]}], "]"}]}], "}"}], "]"}]}], 
+       "}"}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{"White", ",", 
+        RowBox[{"Thickness", "[", "0.01", "]"}], ",", 
+        RowBox[{"Arrow", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"5", ",", "5.5"}], "}"}], ",", 
+           RowBox[{"getPos", "[", 
+            RowBox[{"5", ",", "5.5", ",", "minuteHandLength", ",", 
+             RowBox[{
+              RowBox[{"Pi", "/", "2"}], " ", "-", " ", 
+              RowBox[{"time", " ", "*", " ", 
+               RowBox[{"Pi", "/", "30"}]}]}]}], "]"}]}], "}"}], "]"}]}], 
+       "}"}], "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "time", ",", "currentTimeInMins", ",", "\"\<Time (in minutes)\>\""}], 
+      "}"}], ",", "0", ",", "720", ",", 
+     RowBox[{"1", "/", "60"}]}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->CompressedData["
+1:eJwd0n0s1AEcBvATqak1OSLHnbNZqNmO1t2pdDjiriuM4zCurkMiqltdetu6
+u+SlO9yc1hm96JiYvMymVt7G2SqnMm2USi5lx221VZbR7/n98d3nj2fP89eX
+eaIoSb6BQqFwiIMun4TTsXttkfoPClKnkf55qJXQrTBBvtMGf6gq/sBg0dD2
+w4QDsl2eUKsKpcHCquxEyJuqTYH51kExrKduzIAnNXdITcs5eTAtJbWAzANK
+i8keM+osjIlnX4TP16hV8JWQNePJtUVq5MaPMK6xcR6ajG1LsKkyYAVanA0M
+L8KoiHwOnE4ujoCbk/XRMC3Hnw8D58dFcP/7OjEMEbhnwAs6tyy4Lr2ZD316
+2IXwW26sEl5SnCuBrh2lWujk6F8PE9XXWuDcDVYH6QHfbtjrMNkD6R6tL+DT
+MskAHBpyMcN91FULdHtobWAT3g598gD20sxtsEEx1g7LY7PoHMLHRzqZkG+l
+BsF7wfHB8NZuawj88k4UDgUscRGkjA4roY/VqQJ6f7+qhT/btxhg06HLdVAq
+Ed6Hezrl3TAgc2YYKjRLI5CrZlrglK55AZZUs35B9fgxBpfQti08JJqQuVhb
+ADkThvPQzS7Rw4QdYiMca7Avwq6DcXbovqB15xM292V6wQleHanUVeQL26LX
+GbDreA4Htvpdl8FeRVEuTAiTK6Bptq8EGsIan8G1K6dH4SrTbIblzqnjsEas
+t8Bl3/5JKM5+Yyf3aKd+Q5lpziEGfyDw2wRnVTpXqFmt9oBK7l1P2DJYw4Yv
+jz4iXeEFxkCBN08APy9tTYScMZ8kGNT+Nx3+C/uaB9PLXhfAt46VZ+B/lsSM
+OQ==
+  "],
+ CellLabel->"In[16]:=",ExpressionUUID->"1ce0c1ac-8754-46d5-befd-5afb8d78606d"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`time$$ = Rational[5029, 60], 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`time$$], 35.38650474`11.079563844644417, 
+       "Time (in minutes)"}, 0, 720, 
+      Rational[1, 60]}}, Typeset`size$$ = {360., {178., 184.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`time$12831$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`time$$ = 35.38650474`11.079563844644417}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`time$$, $CellContext`time$12831$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        ParametricPlot[{$CellContext`t + 
+          5, $CellContext`r}, {$CellContext`t, -0.37, 
+          0.37}, {$CellContext`r, (5 $CellContext`t)^2 + 1, 5}, 
+         PlotRange -> {{0, 10}, {0, 10}}, AxesOrigin -> {0, 0}, 
+         PlotStyle -> {Black, 
+           Opacity[1]}], 
+        ParametricPlot[{$CellContext`t + 
+          5, $CellContext`r}, {$CellContext`t, -1, 1}, {$CellContext`r, 
+          6.5, -(0.6 $CellContext`t)^2 + 6.9}, PlotStyle -> {Black, 
+           Opacity[1], 
+           EdgeForm[Black]}], 
+        Graphics[{Black, 
+          Rectangle[{3.95, 4}, {6.05, 6.7}, RoundingRadius -> 0.3]}], 
+        Graphics[{Black, 
+          Disk[{5, 7.8}, {1.3, 1.2}]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          0.85 Cos[$CellContext`t] + 5, (-0.25) 0.85 Sin[2 $CellContext`t] + 
+           6.9}, {$CellContext`t, 0, 2 Pi}, PlotStyle -> {Gray, 
+            Opacity[1]}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {White, 
+           Polygon[$CellContext`l]}], 
+        Graphics[{White, 
+          Disk[{5, 7.7}, {0.9, 0.55}]}], 
+        Graphics[
+         Rectangle[{4, 7.7}, {6, 8.5}]], 
+        Graphics[{White, 
+          Disk[{4.5, 8.2}, 0.35]}], 
+        Graphics[{White, 
+          Disk[{5.5, 8.2}, 0.35]}], 
+        Graphics[{White, 
+          Circle[{5, 5.5}, {0.6, 0.9}]}], 
+        Graphics[{White, 
+          Disk[{4.15, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{4.3, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{4.45, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{4.6, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{5.45, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{5.6, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{5.75, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{5.9, 4.2}, {0.05, 0.1}]}], 
+        Graphics[{White, 
+          Disk[{4.25, 5.75}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{4.27, 5.95}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{4.4, 6.15}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{4.55, 6.35}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{5.75, 5.75}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{5.73, 5.95}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{5.6, 6.15}, {0.1, 0.05}]}], 
+        Graphics[{White, 
+          Disk[{5.45, 6.35}, {0.1, 0.05}]}], 
+        Graphics[{Black, 
+          Triangle[{{3.9, 8.3}, {4.6, 8.8}, {4.25, 9.2}}]}], 
+        Graphics[{Black, 
+          Triangle[{{6.1, 8.3}, {5.4, 8.8}, {5.75, 9.2}}]}], 
+        ReplaceAll[
+         ParametricPlot[{$CellContext`t + 5, $CellContext`t^2 + 
+           7.2}, {$CellContext`t, -0.6, 0.6}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {Black, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          1.3 $CellContext`t + 5, $CellContext`t^2 + 
+           7.4}, {$CellContext`t, -0.5, 0.5}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {White, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        Graphics[{Black, 
+          Disk[{5, 7.7}, 0.2]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          0.5 Cos[$CellContext`t] + 5.1 + 
+           0.1 Sin[2 Pi ($CellContext`time$$/5)], 0.5 Sin[$CellContext`t] + 
+           8.2}, {$CellContext`t, (-Pi)/5, Pi/5}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {Black, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          0.5 Cos[$CellContext`t] + 5.91 + 
+           0.1 Sin[2 Pi ($CellContext`time$$/5)], 0.5 Sin[$CellContext`t] + 
+           8.2}, {$CellContext`t, 4 (Pi/5), 6 (Pi/5)}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {Black, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          0.5 Cos[$CellContext`t] + 4.1 + 
+           0.1 Sin[2 Pi ($CellContext`time$$/5)], 0.5 Sin[$CellContext`t] + 
+           8.2}, {$CellContext`t, (-Pi)/5, Pi/5}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {Black, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        ReplaceAll[
+         ParametricPlot[{
+          0.5 Cos[$CellContext`t] + 4.91 + 
+           0.1 Sin[2 Pi ($CellContext`time$$/5)], 0.5 Sin[$CellContext`t] + 
+           8.2}, {$CellContext`t, 4 (Pi/5), 6 (Pi/5)}], Line[
+           Pattern[$CellContext`l, 
+            Blank[List]]] :> {Black, 
+           Opacity[1], 
+           Polygon[$CellContext`l]}], 
+        Graphics[{White, 
+          Thickness[0.01], 
+          Arrow[{{5, 5.5}, 
+            $CellContext`getPos[
+            5, 5.5, $CellContext`hourHandLength, 
+             Pi/2 - $CellContext`time$$ (Pi/360)]}]}], 
+        Graphics[{White, 
+          Thickness[0.01], 
+          Arrow[{{5, 5.5}, 
+            $CellContext`getPos[
+            5, 5.5, $CellContext`minuteHandLength, 
+             Pi/2 - $CellContext`time$$ (Pi/30)]}]}]], 
+      "Specifications" :> {{{$CellContext`time$$, 
+          35.38650474`11.079563844644417, "Time (in minutes)"}, 0, 720, 
+         Rational[1, 60]}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {225., 231.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.7881957232752666`*^9},
+ CellLabel->"Out[20]=",ExpressionUUID->"6072dbf8-8543-428a-b8ce-803b73374695"]
+}, Open  ]]
+},
+WindowSize->{1536, 821},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 565, 16, 67, "Input",ExpressionUUID->"e1dbbe5e-e3cc-4df0-8d2a-fe08c059f9f4"],
+Cell[CellGroupData[{
+Cell[1148, 40, 22136, 620, 1144, "Input",ExpressionUUID->"1ce0c1ac-8754-46d5-befd-5afb8d78606d",
+ InitializationCell->True],
+Cell[23287, 662, 7042, 171, 475, "Output",ExpressionUUID->"6072dbf8-8543-428a-b8ce-803b73374695"]
+}, Open  ]]
+}
+]
+*)
+
